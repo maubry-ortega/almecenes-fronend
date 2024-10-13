@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Text } from '@chakra-ui/react';
 import { useLocation } from 'react-router-dom';
+import { FaUser } from 'react-icons/fa'; // Icono de usuario
 
 const Header: React.FC = () => {
   const location = useLocation();
@@ -14,8 +15,9 @@ const Header: React.FC = () => {
   };
 
   return (
-    <Box as="header" bg="teal.500" color="white" p={4}>
+    <Box as="header" bg="teal.500" color="white" p={4} display="flex" justifyContent="space-between" alignItems="center">
       <Text fontSize="2xl">{getTitle()}</Text>
+      <FaUser size="24" /> {/* Icono de usuario */}
     </Box>
   );
 };

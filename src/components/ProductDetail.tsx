@@ -1,65 +1,48 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Box, Text, Image, Button, Heading } from '@chakra-ui/react';
-import { fetchProductsByStoreId } from '../services/api';
+import { Box, Text, Image, Button, Spinner } from '@chakra-ui/react';
+import { fetchStoreById } from '../services/api';
 
-interface Product {
-  id: number;
-  nombre: string;
-  descripcion: string;
-  img: string;
+interface ProductDetailProps {
+  setTitle: (title: string) => void;
 }
 
-const ProductDetail: React.FC = () => {
+const ProductDetail: React.FC<ProductDetailProps> = ({ setTitle }) => {
   const { id } = useParams<{ id: string }>();
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const [store, setStore] = useState<any | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  // Cargar los productos del almacén seleccionado
   useEffect(() => {
-    const loadProducts = async () => {
-      try {
-        setLoading(true);
-        if (id) {
-          const data = await fetchProductsByStoreId(parseInt(id));
-          setProducts(data);
-        }
-      } catch (error) {
-        setError('Error al cargar los productos.');
-      } finally {
+    const loadStore = async () => {
+      if (id) {
+        const storeData = await fetchStoreById(parseInt(id, 10));
+        setStore(storeData);
+        setTitle(storeData ? storeData.nombre : 'Almacén no encontrado');
         setLoading(false);
       }
     };
 
-    loadProducts();
-  }, [id]);
+    loadStore();
+  }, [id, setTitle]);
 
-  if (loading) {
-    return <Text>Cargando productos...</Text>;
-  }
+  if (loading) return <Spinner size="xl" />;
 
-  if (error) {
-    return <Text>{error}</Text>;
-  }
-
-  if (products.length === 0) {
-    return <Text>No se encontraron productos para este almacén.</Text>;
-  }
+  if (!store) return <Text>Almacén no encontrado</Text>;
 
   return (
-    <Box maxW="container.lg" mx="auto" p={4}>
-      <Heading as="h2" mb={6}>Productos del almacén</Heading>
-      <Box display="grid" gridTemplateColumns="repeat(auto-fill, minmax(250px, 1fr))" gap={6}>
-        {products.map((product) => (
-          <Box key={product.id} borderWidth="1px" borderRadius="lg" p={4} shadow="md" _hover={{ shadow: 'lg' }} transition="all 0.3s">
-            <Image src={product.img} alt={product.nombre} mb={4} />
-            <Heading as="h3" size="md" mb={2}>{product.nombre}</Heading>
-            <Text>{product.descripcion}</Text>
-          </Box>
-        ))}
-      </Box>
-      <Button as={Link} to="/" mt={6} colorScheme="teal">Volver a Almacenes</Button>
+    <Box maxW="lg" mx="auto" borderWidth="1px" borderRadius="lg" overflow="hidden" p={4}>
+      <Text fontWeight="bold" fontSize="2xl">{store.nombre}</Text>
+      <Text mt={4}>Productos:</Text>
+      {store.productos.map((producto: any) => (
+        <Box key={producto.id} mt={4}>
+          <Image src={producto.img} alt={producto.nombre} />
+          <Text fontWeight="bold">{producto.nombre}</Text>
+          <Text>{producto.descripcion}</Text>
+        </Box>
+      ))}
+      <Button as={Link} to="/" colorScheme="teal" mt={6}>
+        Volver a los almacenes
+      </Button>
     </Box>
   );
 };

@@ -1,45 +1,44 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Text, Image, Stack } from '@chakra-ui/react';
-import { fetchProductsByStoreId } from '../services/api';
 import { useParams } from 'react-router-dom';
+import { Box, Text, Image, Button } from '@chakra-ui/react';
+import { Link } from 'react-router-dom';
+import { fetchStoreById } from '../services/api';
 
-interface Product {
-  id: number;
-  nombre: string;
-  descripcion: string;
-  img: string;
-}
-
-const ProductList: React.FC = () => {
+const ProductDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const [products, setProducts] = useState<Product[]>([]);
+  const [store, setStore] = useState<any | null>(null);
 
   useEffect(() => {
-    const loadProducts = async () => {
-      const data = await fetchProductsByStoreId(parseInt(id as string, 10));
-      setProducts(data);
+    const loadStore = async () => {
+      if (id) {
+        const storeData = await fetchStoreById(parseInt(id, 10));
+        setStore(storeData);
+      }
     };
 
-    loadProducts();
+    loadStore();
   }, [id]);
 
-  if (products.length === 0) {
-    return <Text>No se encontraron productos</Text>;
+  if (!store) {
+    return <Text>Almacén no encontrado</Text>;
   }
 
   return (
-    <Stack spacing={4}>
-      {products.map(product => (
-        <Box key={product.id} borderWidth="1px" borderRadius="lg" overflow="hidden" p={4}>
-          <Image src={product.img} alt={product.nombre} />
-          <Box p="6">
-            <Text fontWeight="bold" fontSize="2xl">{product.nombre}</Text>
-            <Text mt={4}>{product.descripcion}</Text>
-          </Box>
+    <Box maxW="lg" mx="auto" borderWidth="1px" borderRadius="lg" overflow="hidden" p={4}>
+      <Text fontWeight="bold" fontSize="2xl">{store.nombre}</Text>
+      <Text mt={4}>Productos:</Text>
+      {store.productos.map((producto: any) => (
+        <Box key={producto.id} mt={4}>
+          <Image src={producto.img} alt={producto.nombre} />
+          <Text fontWeight="bold">{producto.nombre}</Text>
+          <Text>{producto.descripcion}</Text>
         </Box>
       ))}
-    </Stack>
+      <Button as={Link} to="/" colorScheme="teal" mt={6}>
+        Volver a los almacenes
+      </Button>
+    </Box>
   );
 };
 
-export default ProductList;
+export default ProductDetail;
