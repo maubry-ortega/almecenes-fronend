@@ -18,7 +18,7 @@ const Main: React.FC<MainProps> = ({ setTitle }) => {
         try {
           const response = await axios.get(`http://localhost:5000/api/products/${id}`);
           setStore(response.data);
-          setTitle(response.data.store_id); // Suponiendo que `nombre` es la propiedad del almacén
+          setTitle(response.data.store_id);
         } catch (error) {
           console.error('Error al obtener productos:', error);
         }
