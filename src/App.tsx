@@ -7,7 +7,7 @@ import ProductDetail from './components/ProductDetail';
 import NotFound from './components/NotFound';
 
 const App: React.FC = () => {
-  const [title, setTitle] = useState('Almacenes');
+  const [, setTitle] = useState('Almacenes');
 
   return (
     <Layout>

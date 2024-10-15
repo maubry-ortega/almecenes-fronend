@@ -1,6 +1,6 @@
 // src/components/Stores.tsx
 import React, { useEffect, useState } from 'react';
-import { Box, Heading, Text, Link as ChakraLink, Flex, Spinner } from '@chakra-ui/react';
+import { Box, Heading, Link as ChakraLink, Flex, Spinner } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { fetchStores } from '../services/api';
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Box, Text, Image, Button } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
-import { fetchStoreById } from '../services/api';
+import { fetchProductsByStoreId } from '../services/api';
 
 const ProductDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -11,7 +11,7 @@ const ProductDetail: React.FC = () => {
   useEffect(() => {
     const loadStore = async () => {
       if (id) {
-        const storeData = await fetchStoreById(parseInt(id, 10));
+        const storeData = await fetchProductsByStoreId(parseInt(id, 10));
         setStore(storeData);
       }
     };

@@ -14,12 +14,12 @@ export const fetchStores = async () => {
 };
 
 // Función para obtener un almacén por ID
-export const fetchStoreById = async (id: number) => {
+export const fetchProductsByStoreId = async (storeId: number) => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/stores/${id}`);
+    const response = await axios.get(`${API_BASE_URL}/stores/${storeId}/products`);
     return response.data;
   } catch (error) {
-    console.error('Error en fetchStoreById:', error);
+    console.error('Error en fetchProductsByStoreId:', error);
     return null;
   }
 };
