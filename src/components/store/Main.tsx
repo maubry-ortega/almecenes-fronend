@@ -1,8 +1,7 @@
-// src/components/Main.tsx
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Box, Heading, Text, Spinner } from '@chakra-ui/react';
-import { fetchProductsByStoreId } from '../services/api'; // Importar función correcta
+import { fetchProductsByStoreId } from '../../services/api/productsApi'; // Nueva ruta de importación
 
 interface MainProps {
   setTitle: (title: string) => void;
@@ -12,19 +11,25 @@ const Main: React.FC<MainProps> = ({ setTitle }) => {
   const { id } = useParams<{ id: string }>();
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null); // Nuevo estado para errores
 
   useEffect(() => {
     const loadProducts = async () => {
       if (id) {
-        const data = await fetchProductsByStoreId(parseInt(id, 10));
+        try {
+          const data = await fetchProductsByStoreId(parseInt(id, 10));
 
-        if (Array.isArray(data)){
-          setProducts(data);
-        } else {
-          setProducts([]);
+          if (Array.isArray(data)) {
+            setProducts(data);
+          } else {
+            setProducts([]);
+            setError('No se encontraron productos.');
+          }
+
+          setTitle(`Almacén ${id}`);
+        } catch (err) {
+          setError('Error al cargar productos.');
         }
-
-        setTitle(`Almacén ${id}`);
       }
       setLoading(false);
     };
@@ -39,6 +44,10 @@ const Main: React.FC<MainProps> = ({ setTitle }) => {
         <Text mt={4}>Cargando productos...</Text>
       </Box>
     );
+  }
+
+  if (error) {
+    return <Text textAlign="center" mt={10} color="red.500">{error}</Text>;
   }
 
   if (products.length === 0) {

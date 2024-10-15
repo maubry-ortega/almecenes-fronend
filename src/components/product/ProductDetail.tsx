@@ -1,8 +1,7 @@
-// src/components/ProductDetail.tsx
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Box, Text, Image, Button, Spinner } from '@chakra-ui/react';
-import { fetchProductsByStoreId } from '../services/api';
+import { fetchProductsByStoreId } from '../../services/api/productsApi';
 
 interface ProductDetailProps {
   setTitle: (title: string) => void;
@@ -36,9 +35,10 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ setTitle }) => {
       <Text mt={4}>Productos:</Text>
       {products.map((producto) => (
         <Box key={producto.id} mt={4}>
-          <Image src={producto.img} alt={producto.name} />
-          <Text fontWeight="bold">{producto.name}</Text>
-          <Text>{producto.description}</Text>
+          <Image src={producto.img} alt={producto.nombre} />
+          <Text fontWeight="bold">{producto.nombre}</Text>
+          <Text>{producto.descripcion}</Text>
+          <Text>{producto.id_tienda}</Text>
         </Box>
       ))}
       <Button as={Link} to="/" colorScheme="teal" mt={6}>

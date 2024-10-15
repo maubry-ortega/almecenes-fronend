@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Box, Text, Image, Button } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
-import { fetchProductsByStoreId } from '../services/api';
+import { fetchProductsByStoreId } from '../../services/api/productsApi';
 
 const ProductDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -32,6 +32,7 @@ const ProductDetail: React.FC = () => {
           <Image src={producto.img} alt={producto.nombre} />
           <Text fontWeight="bold">{producto.nombre}</Text>
           <Text>{producto.descripcion}</Text>
+          <Text>{producto.id_tienda}</Text>
         </Box>
       ))}
       <Button as={Link} to="/" colorScheme="teal" mt={6}>
